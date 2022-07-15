@@ -1,0 +1,27 @@
+{
+    "name": "gmtk-jam-2022",
+    "version": "0.0.0",
+    "description": "",
+    "main": "webpack.config.js",
+    "scripts": {
+        "serve": "webpack serve",
+        "dev": "webpack serve",
+        "build": "webpack",
+        "build:prod": "webpack -p"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EdricY/GMTK-Jam-2022.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/EdricY/GMTK-Jam-2022/issues"
+    },
+    "homepage": "https://github.com/EdricY/GMTK-Jam-2022#readme",
+    "dependencies": {
+        "webpack": "^5.73.0",
+        "webpack-cli": "^4.10.0",
+        "webpack-dev-server": "^4.9.3"
+    }
+}
