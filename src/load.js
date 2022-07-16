@@ -5,7 +5,10 @@ const imgSources = {
   green: "./assets/green.png",
   gray: "./assets/gray.png",
   shield: "./assets/shield.png",
-  arrow: "./assets/arrow.png",
+  arrowUp: "./assets/arrow-up.png",
+  arrowDown: "./assets/arrow-down.png",
+  arrowRight: "./assets/arrow-right.png",
+  arrowLeft: "./assets/arrow-left.png",
 }
 
 const audioSources = {

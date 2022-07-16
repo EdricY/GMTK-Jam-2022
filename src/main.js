@@ -1,8 +1,17 @@
 import { Dice } from "./dice";
-import { allDice, ctx, H, MS_PER_UPDATE, randInt, W } from "./globals";
+import { DiceGrid } from "./dice-grid";
+import { canvas, ctx, getEl, H, MS_PER_UPDATE, randInt, W } from "./globals";
+import { setUpInputs } from "./inputs";
 import { preloadAssets, doneLoadingResrcs, imgs } from "./load";
-
+import { drawMenu } from "./menu";
+let diceGrid;
+getEl("leftBtn").onclick = () => {
+  screen.orientation.lock('portrait');
+  document.body.requestFullscreen();
+}
 function init() {
+
+  drawMenu(ctx);
   // initial setup
   preloadAssets();
 
@@ -11,10 +20,12 @@ function init() {
     if (doneLoadingResrcs()) {
       clearInterval(loadImgInterval);
 
+      diceGrid = new DiceGrid();
+      window.diceGrid = diceGrid
       addALotOfDice();
       tick();
     }
-  }, 100)
+  }, 500)
 }
 
 let lastTime;
@@ -39,27 +50,35 @@ function update() {
 function draw() {
   const now = Date.now()
   ctx.clearRect(0, 0, W, H)
-  allDice.forEach(d => {
-    d.draw(ctx)
-  })
+  diceGrid.draw(ctx);
 }
 
 function addALotOfDice() {
   console.log('start!');
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 5; i++) {
     let d = Math.random() < .5 ? new Dice(
-      ["arrow", "arrow", "arrow", "arrow", "arrow", "arrow"],
+      ["arrowDown", "arrowDown", "arrowDown", "arrowDown", "arrowDown", "arrowDown"],
       ["gray", "gray", "gray", "green", "green", "green"],
     ) : new Dice(
       ["shield", "shield", "shield", "shield", "shield", "shield"],
       ["red", "blue", "blue", "blue", "red", "blue"],
     )
-    d.x = 100 + Math.random() * 300;
-    d.y = 100 + Math.random() * 300;
-    allDice.push(d);
+    diceGrid.addDiceRandomLoc(d);
     d.roll(randInt(1, 6), 1000 + randInt(10, 3000), .01 + Math.random());
   }
 }
 
+function onClick(x, y) {
+  let d = Math.random() < .5 ? new Dice(
+    ["arrowDown", "arrowDown", "arrowDown", "arrowDown", "arrowDown", "arrowDown"],
+    ["gray", "gray", "gray", "green", "green", "green"],
+  ) : new Dice(
+    ["shield", "shield", "shield", "shield", "shield", "shield"],
+    ["red", "blue", "blue", "blue", "red", "blue"],
+  )
+  diceGrid.addDiceSequential(d);
+  d.roll(randInt(1, 6), 1000 + randInt(10, 3000), .01 + Math.random());
+}
 
+setUpInputs(onClick)
 init();
