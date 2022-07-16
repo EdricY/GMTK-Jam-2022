@@ -1,83 +1,68 @@
 import { Dice } from "./dice";
 import { DiceGrid } from "./dice-grid";
-import { canvas, ctx, getEl, H, MS_PER_UPDATE, randInt, W } from "./globals";
+import { canvas, ctx, gameState, getEl, H, leftBtn, MS_PER_UPDATE, randInt, rightBtn, W } from "./globals";
 import { setUpInputs } from "./inputs";
 import { preloadAssets, doneLoadingResrcs, imgs } from "./load";
-import { drawMenu } from "./menu";
+import GameState from "./state";
 let diceGrid;
-getEl("leftBtn").onclick = () => {
-  screen.orientation.lock('portrait');
-  document.body.requestFullscreen();
-}
-function init() {
 
-  drawMenu(ctx);
+export function init() {
   // initial setup
+  gameState.gotoMenu();
   preloadAssets();
 
   // wait for assets to finish loading
   let loadImgInterval = setInterval(() => {
     if (doneLoadingResrcs()) {
+      leftBtn.disabled = false;
+      rightBtn.disabled = false;
       clearInterval(loadImgInterval);
 
       diceGrid = new DiceGrid();
       window.diceGrid = diceGrid
-      addALotOfDice();
-      tick();
     }
   }, 500)
 }
 
-let lastTime;
-let lag;
-function tick() {
-  let current = performance.now();
-  let elapsed = current - lastTime;
-  lastTime = current;
-  lag += elapsed;
-  while (lag >= MS_PER_UPDATE) {
-    this.update();
-    lag -= MS_PER_UPDATE;
-  }
-  draw();
-  requestAnimationFrame(tick);
+export function gameUpdate() {
+  diceGrid.update();
 }
 
-function update() {
-
-}
-
-function draw() {
+export function gameDraw() {
   const now = Date.now()
   ctx.clearRect(0, 0, W, H)
   diceGrid.draw(ctx);
 }
 
-function addALotOfDice() {
-  console.log('start!');
-  for (let i = 0; i < 5; i++) {
-    let d = Math.random() < .5 ? new Dice(
-      ["arrowDown", "arrowDown", "arrowDown", "arrowDown", "arrowDown", "arrowDown"],
-      ["gray", "gray", "gray", "green", "green", "green"],
-    ) : new Dice(
-      ["shield", "shield", "shield", "shield", "shield", "shield"],
-      ["red", "blue", "blue", "blue", "red", "blue"],
-    )
-    diceGrid.addDiceRandomLoc(d);
-    d.roll(randInt(1, 6), 1000 + randInt(10, 3000), .01 + Math.random());
+function onClick(x, y) {
+  if (!gameState.inState(GameState.GAME)) {
+    return;
   }
+
+  if (diceGrid.allResolved) {
+
+    diceGrid.selectArrowAtXY(x, y);
+  }
+  // const clickedDice = diceGrid.getDiceAtXY(x, y);
+  // if (clickedDice) diceGrid.removeDice(clickedDice)
 }
 
-function onClick(x, y) {
+export function leftBtnAction() {
   let d = Math.random() < .5 ? new Dice(
-    ["arrowDown", "arrowDown", "arrowDown", "arrowDown", "arrowDown", "arrowDown"],
-    ["gray", "gray", "gray", "green", "green", "green"],
+    ["glyph1", "glyph2", "glyph3", "glyph4", "glyph5", "glyph6"],
+    ["gray", "red", "green", "green", "blue", "red"],
   ) : new Dice(
-    ["shield", "shield", "shield", "shield", "shield", "shield"],
+    ["onebanana", "onebanana", "splitbanana", "splitbanana", "threebanana", "threebanana"],
     ["red", "blue", "blue", "blue", "red", "blue"],
   )
-  diceGrid.addDiceSequential(d);
-  d.roll(randInt(1, 6), 1000 + randInt(10, 3000), .01 + Math.random());
+  d.roll();
+  diceGrid.addDiceRandomLoc(d);
+  diceGrid.update();
+}
+
+export function rightBtnAction() {
+  diceGrid.rerollSelectedLine();
+  diceGrid.deselectLine();
 }
 
 setUpInputs(onClick)

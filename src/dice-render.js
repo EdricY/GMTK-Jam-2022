@@ -40,7 +40,6 @@ export class DiceRender {
     this.faceIdx = 0;
     this.faces = faces;
     this.colors = colors;
-    this.resolved = false;
     this.done = true; //externally controlled
     this.canvasCount = (canvasCounter++) % diceGls.length;
     this.bufferCtx = document.createElement("canvas").getContext("2d");
@@ -118,12 +117,6 @@ export class DiceRender {
     this.gl.texParameteri(this.gl.TEXTURE_CUBE_MAP, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR_MIPMAP_LINEAR);
 
   }
-
-  // contains(x, y) {
-  //   let dx = this.x - x;
-  //   let dy = this.y - y;
-  //   return dx * dx + dy * dy < 50 * 50;
-  // }
 
   draw(ctx, x, y) {
     if (this.isDoneRolling(Date.now())) {
@@ -220,11 +213,15 @@ export class DiceRender {
     // Math.random() * -.01 - .01;
   }
 
-  isDoneRolling(now) {
+  isDoneRolling(now = Date.now()) {
     const timePad = 200;
     return now >= this.rollStopTime + timePad;
   }
 
+  shouldBeResolved(now = Date.now()) {
+    const timePad = 200;
+    return now >= this.rollStopTime - timePad;
+  }
 }
 
 function radToDeg(r) {

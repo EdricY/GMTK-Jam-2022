@@ -9,6 +9,16 @@ const imgSources = {
   arrowDown: "./assets/arrow-down.png",
   arrowRight: "./assets/arrow-right.png",
   arrowLeft: "./assets/arrow-left.png",
+  diceIcon: "./assets/dice.png",
+  glyph1: "./assets/thicdiceface1.png",
+  glyph2: "./assets/thicdiceface2.png",
+  glyph3: "./assets/thicdiceface3.png",
+  glyph4: "./assets/thicdiceface4.png",
+  glyph5: "./assets/thicdiceface5.png",
+  glyph6: "./assets/thicdiceface6.png",
+  onebanana: "./assets/onebanana.png",
+  threebanana: "./assets/threebanana.png",
+  splitbanana: "./assets/splitbanana.png",
 }
 
 const audioSources = {
