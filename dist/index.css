@@ -7,7 +7,8 @@ html {
 }
 
 body {
-    background-color: rgb(224, 189, 189);
+    background-color: #275c2e;
+    /* background-color: #378541; */
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -64,4 +65,10 @@ button:active {
 
 .nodisp {
     display: none;
+}
+
+.asdf {
+    color: #60cb9f;
+    color: #2aadda;
+    color: #df4a36;
 }

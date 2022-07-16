@@ -1,4 +1,4 @@
-import { H, randEl, randInt, W } from "./globals";
+import { H, leftBtn, randEl, randInt, rightBtn, W } from "./globals";
 import { imgs } from "./load";
 
 const squareSize = 80;
@@ -20,13 +20,22 @@ export class DiceGrid {
     this.selectedLine = null;
   }
 
+  getSelectedLine() {
+    if (!this.selectedLine) return [];
+    if (this.selectedLine[0] === 'v') return this.getCol(this.selectedLine[1])
+    else if (this.selectedLine[0] === 'h') return this.getRow(this.selectedLine[1])
+  }
+
   rerollSelectedLine() {
+    if (!this.selectedLine) return;
     if (this.selectedLine[0] === 'v') this.rerollCol(this.selectedLine[1])
     else if (this.selectedLine[0] === 'h') this.rerollRow(this.selectedLine[1])
   }
 
   deselectLine() {
     this.selectedLine = null;
+    leftBtn.innerText = "A"
+    rightBtn.innerText = "B"
   }
 
   rerollRow(r) {
@@ -43,6 +52,26 @@ export class DiceGrid {
     for (let count = 0; count < this.n; count++) {
       this.grid[first + count * this.n]?.roll();
     }
+  }
+
+  getRow(r) {
+    const arr = [];
+    if (r < 0 || r >= this.n) return arr;
+    const first = r * this.n;
+    for (let count = 0; count < this.n; count++) {
+      arr.push(this.grid[first + count])
+    }
+    return arr;
+  }
+
+  getCol(c) {
+    const arr = [];
+    if (c < 0 || c >= this.n) return arr;
+    const first = c;
+    for (let count = 0; count < this.n; count++) {
+      arr.push(this.grid[first + count * this.n])
+    }
+    return arr;
   }
 
   contains(x, y) {
@@ -93,7 +122,12 @@ export class DiceGrid {
 
   selectArrowAtXY(x, y) {
     this.selectedLine = this.getArrowAtXY(x, y);
-    console.log(this.selectedLine)
+    if (this.selectedLine) {
+      leftBtn.innerText = "CLAIM"
+      rightBtn.innerText = "REROLL"
+    } else {
+      this.deselectLine()
+    }
   }
 
   getDiceAtRC(r, c) {
@@ -173,7 +207,13 @@ export class DiceGrid {
   draw(ctx) {
     for (let i = 0; i < this.grid.length; i++) {
       const dice = this.grid[i];
-      if (dice) dice.draw(ctx)
+      if (dice) {
+        let offset = Math.sin(.005 * Date.now() + i * Math.PI / .81);
+        ctx.save()
+        ctx.translate(offset, 0)
+        dice.draw(ctx)
+        ctx.restore()
+      }
     }
 
     if (!this.allResolved) return;

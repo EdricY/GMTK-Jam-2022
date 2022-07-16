@@ -5,10 +5,10 @@ const imgSources = {
   green: "./assets/green.png",
   gray: "./assets/gray.png",
   shield: "./assets/shield.png",
-  arrowUp: "./assets/arrow-up.png",
-  arrowDown: "./assets/arrow-down.png",
-  arrowRight: "./assets/arrow-right.png",
-  arrowLeft: "./assets/arrow-left.png",
+  arrowUp: "./assets/arrowlighter-up.png",
+  arrowDown: "./assets/arrowlighter-down.png",
+  arrowRight: "./assets/arrowlighter-right.png",
+  arrowLeft: "./assets/arrowlighter-left.png",
   diceIcon: "./assets/dice.png",
   glyph1: "./assets/thicdiceface1.png",
   glyph2: "./assets/thicdiceface2.png",
@@ -19,10 +19,15 @@ const imgSources = {
   onebanana: "./assets/onebanana.png",
   threebanana: "./assets/threebanana.png",
   splitbanana: "./assets/splitbanana.png",
+  background: "./assets/background.png",
+  menu: "./assets/workingtitle.png",
 }
 
 const audioSources = {
-  clunk: "./assets/clunk.mp3",
+  clunk1: "./assets/clunk.mp3",
+  clunk2: "./assets/clunk.mp3",
+  clunk3: "./assets/clunk.mp3",
+  clunk4: "./assets/clunk.mp3",
 }
 export const imgs = {}
 export const sounds = {}

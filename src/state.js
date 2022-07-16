@@ -1,4 +1,5 @@
 import { H, leftBtn, rightBtn, W, canvas, ctx, MS_PER_UPDATE } from "./globals"
+import { imgs } from "./load";
 import { gameDraw, gameUpdate, leftBtnAction, rightBtnAction, startGame } from "./main";
 
 export default class GameState {
@@ -21,14 +22,12 @@ export default class GameState {
     this.keepTicking = false;
     this.state = GameState.MENU;
 
-    ctx.clearRect(0, 0, W, H);
-    ctx.font = "50px Arial"
-    ctx.fillText("Menu", 100, 100);
+    console.log(imgs["menu"])
+    ctx.drawImage(imgs["menu"], 0, 0, W, H)
 
     leftBtn.innerText = "PLAY"
-    leftBtn.onclick = () => {
-      this.gotoGame();
-    }
+    leftBtn.onclick = () => this.gotoGame();
+
 
     rightBtn.innerText = "CREDITS"
     rightBtn.onclick = () => this.gotoCredits()
