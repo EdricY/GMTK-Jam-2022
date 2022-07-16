@@ -34,8 +34,8 @@ export class DiceGrid {
 
   deselectLine() {
     this.selectedLine = null;
-    leftBtn.innerText = "A"
-    rightBtn.innerText = "B"
+    leftBtn.innerText = "DICE A"
+    rightBtn.innerText = "DICE B"
   }
 
   rerollRow(r) {

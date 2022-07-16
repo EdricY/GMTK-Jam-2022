@@ -55,10 +55,10 @@ export default class GameState {
     this.draw = gameDraw;
     requestAnimationFrame(this.tick.bind(this));
 
-    leftBtn.innerText = "ADD DICE"
+    leftBtn.innerText = "DICE A"
     leftBtn.onclick = leftBtnAction;
 
-    rightBtn.innerText = "B";
+    rightBtn.innerText = "DICE B";
     rightBtn.onclick = rightBtnAction;
   }
   tick() {
