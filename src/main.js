@@ -1,11 +1,30 @@
-function myComponent(){
-  const divElement = document.createElement('div');
-  const h2 = document.createElement('h2');
-  h2.innerText = 'Nice';
-  const img = document.createElement('img');
-  img.src = "./assets/asdf.png";
-  divElement.appendChild(h2);
-  divElement.appendChild(img);
-  return divElement;
+import { Dice } from "./dice";
+import { preloadAssets, doneLoadingResrcs, imgs } from "./load";
+
+function init() {
+  // initial setup
+  preloadAssets();
+
+  // wait for assets to finish loading
+  let loadImgInterval = setInterval(() => {
+    if (doneLoadingResrcs()) {
+      clearInterval(loadImgInterval);
+
+      doThing();
+    }
+  }, 100)
 }
-document.body.appendChild(myComponent());
+
+function doThing() {
+  console.log('start!');
+  let x = new Dice(
+    ["shield", "arrow", "arrow", "arrow", "arrow", "arrow"],
+    ["gray", "gray", "gray", "green", "red", "blue"],
+  )
+  x.roll(Math.floor(Math.random() * 6), 100, 1);
+  x.drawScene();
+  setInterval(() => x.drawScene(), 10)
+  console.log(x)
+}
+
+init();

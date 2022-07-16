@@ -1,17 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="index.css" />
-    <title>GMTK Jam 2022</title>
-  </head>
- <body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="index.css" />
+  <title>GMTK Jam 2022</title>
+</head>
+<script id="vertex-shader-3d" type="x-shader/x-vertex">
+  attribute vec4 a_position;
+  
+  uniform mat4 u_matrix;
+  
+  varying vec3 v_normal;
+  
+  void main() {
+    gl_Position = u_matrix * a_position;
+    v_normal = normalize(a_position.xyz);
+  }
+  </script>
+<!-- fragment shader -->
+<script id="fragment-shader-3d" type="x-shader/x-fragment">
+  precision mediump float;
+  varying vec3 v_normal;
+  uniform samplerCube u_texture;
+  void main() {
+     gl_FragColor = textureCube(u_texture, normalize(v_normal));
+  }
+  </script>
+
+<body>
   <div>
     <h1>Good webpack setup</h1>
-    <img src="./assets/asdf.png" alt="smiley">
   </div>
- </body>
- <script src="./game.js"></script>
+</body>
+<script src="./game.js"></script>
+
 </html>
