@@ -58,8 +58,6 @@ function newPart(x, y, color, rscale) {
       ctx.fillStyle = this.color;
       ctx.arc(this.x, this.y, this.r, 0, tau);
       ctx.fill();
-      ctx.strokeStyle = "black";
-      ctx.stroke();
       ctx.closePath();
       ctx.lineWidth = oldW;
     },
@@ -95,8 +93,6 @@ function newSpiralPart(x, y) {
       ctx.fillStyle = this.color;
       ctx.arc(this.x, this.y, this.r, 0, tau);
       ctx.fill();
-      ctx.fillStyle = "black";
-      ctx.stroke();
     },
     update: function () {
       this.x += this.r * Math.cos(this.theta);
