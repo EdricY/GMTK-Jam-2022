@@ -23,6 +23,9 @@ export class Dice {
     this.resolved = false;
     this.done = true; //externally controlled
     this.canvas = document.createElement("canvas");
+    this.canvas.height = 100;
+    this.canvas.width = 100;
+
     document.body.appendChild(this.canvas)
     this.canvas.classList.add("gone")
     var gl = this.canvas.getContext("webgl");
@@ -106,9 +109,7 @@ export class Dice {
 
   draw(ctx, x = this.x, y = this.y) {
     this.drawScene()
-    this.canvas.height = 100;
-    this.canvas.width = 100;
-    ctx.drawImage(this.gl.canvas, x - 50, y - 50, 100, 100)
+    ctx.drawImage(this.gl.canvas, x - 50, y - 50, 100, 100);
   }
 
   drawScene() {
@@ -192,7 +193,7 @@ export class Dice {
     this.rollStopTime = Date.now() + duration;
 
     this.rotXVel = Math.random() * force + force;
-    this.rotYVel = -.02
+    this.rotYVel = -.02;
     // Math.random() * -.01 - .01;
   }
 

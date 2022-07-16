@@ -19,7 +19,7 @@
     gl_Position = u_matrix * a_position;
     v_normal = normalize(a_position.xyz);
   }
-  </script>
+</script>
 <!-- fragment shader -->
 <script id="fragment-shader-3d" type="x-shader/x-fragment">
   precision mediump float;
@@ -28,11 +28,11 @@
   void main() {
      gl_FragColor = textureCube(u_texture, normalize(v_normal));
   }
-  </script>
+</script>
 
 <body>
+  <canvas id="canvas" width="800" height="960"></canvas>
   <div>
-    <h1>Good webpack setup</h1>
   </div>
 </body>
 <script src="./game.js"></script>
