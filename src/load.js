@@ -32,4 +32,7 @@ export const doneLoadingResrcs = () => {
   return loaded == Object.keys(imgSources).length + Object.keys(audioSources).length
 }
 
-const onResrcLoad = () => { loaded++; console.log("loaded", loaded) }
+const onResrcLoad = () => {
+  loaded++;
+  // console.log("loaded", loaded);
+}

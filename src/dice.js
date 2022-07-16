@@ -11,6 +11,28 @@ const faceCoords = [
   { x: 0, y: Math.PI },
 ];
 
+let diceGls = [];
+for (let i = 0; i < 16; i++) {
+  diceGls.push(document.createElement("canvas").getContext("webgl"))
+  if (!diceGls[0].drawingBufferHeight) {
+    diceGls.shift();
+    break;
+  }
+}
+
+diceGls.forEach(x => {
+  x.canvas.height = 100;
+  x.canvas.width = 100;
+  document.body.appendChild(x.canvas);
+  x.canvas.classList.add("gone");
+})
+
+if (!diceGls[0]) {
+  console.error("no webgl :(");
+}
+let lastDrawns = diceGls.map(c => null);
+let canvasCounter = 0;
+
 export class Dice {
   constructor(faces, colors) {
     this.x = 0;
@@ -22,37 +44,30 @@ export class Dice {
     this.colors = colors;
     this.resolved = false;
     this.done = true; //externally controlled
-    this.canvas = document.createElement("canvas");
-    this.canvas.height = 100;
-    this.canvas.width = 100;
+    this.canvasCount = (canvasCounter++) % diceGls.length;
+    this.gl = diceGls[this.canvasCount];
+    this.canvas = this.gl.canvas;
 
-    document.body.appendChild(this.canvas)
-    this.canvas.classList.add("gone")
-    var gl = this.canvas.getContext("webgl");
-    this.gl = gl;
-    if (!gl) {
-      console.error("no webgl :(");
-    }
     // setup GLSL program
-    this.program = twgl.createProgramFromScripts(gl, ["vertex-shader-3d", "fragment-shader-3d"]);
+    this.program = twgl.createProgramFromScripts(this.gl, ["vertex-shader-3d", "fragment-shader-3d"]);
 
     // look up where the vertex data needs to go.
-    this.positionLocation = gl.getAttribLocation(this.program, "a_position");
+    this.positionLocation = this.gl.getAttribLocation(this.program, "a_position");
 
     // lookup uniforms
-    this.matrixLocation = gl.getUniformLocation(this.program, "u_matrix");
-    this.textureLocation = gl.getUniformLocation(this.program, "u_texture");
+    this.matrixLocation = this.gl.getUniformLocation(this.program, "u_matrix");
+    this.textureLocation = this.gl.getUniformLocation(this.program, "u_texture");
 
     // Create a buffer for positions
-    this.positionBuffer = gl.createBuffer();
+    this.positionBuffer = this.gl.createBuffer();
     // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
     // Put the positions in the buffer
-    setGeometry(gl);
+    setGeometry(this.gl);
 
     // Create a texture.
-    var texture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+    var texture = this.gl.createTexture();
+    this.gl.bindTexture(this.gl.TEXTURE_CUBE_MAP, texture);
 
 
 
@@ -108,13 +123,16 @@ export class Dice {
   }
 
   draw(ctx, x = this.x, y = this.y) {
+    if (lastDrawns[this.canvasCount] !== this) {
+      this.mapFaces(this.faces, this.colors);
+    }
     this.drawScene()
     ctx.drawImage(this.gl.canvas, x - 50, y - 50, 100, 100);
+    lastDrawns[this.canvasCount] = this;
   }
 
   drawScene() {
     let { program, positionLocation, matrixLocation, textureLocation } = this;
-    let gl = this.gl
     // convert to seconds
     let time = performance.now()
     time *= 0.001;
@@ -123,34 +141,30 @@ export class Dice {
     // Remember the current time for the next frame.
     this.then = time;
 
-    // webglUtils.resizeCanvasToDisplaySize(this.canvas);
-    // this.canvas.height = 100;
-    // this.canvas.width = 100;
-
     // Tell WebGL how to convert from clip space to pixels
-    gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+    this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 
-    gl.enable(gl.CULL_FACE);
-    gl.enable(gl.DEPTH_TEST);
+    this.gl.enable(this.gl.CULL_FACE);
+    this.gl.enable(this.gl.DEPTH_TEST);
     // Clear the canvas AND the depth buffer.
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
     // Tell it to use our program (pair of shaders)
-    gl.useProgram(program);
+    this.gl.useProgram(program);
 
     // Turn on the position attribute
-    gl.enableVertexAttribArray(positionLocation);
+    this.gl.enableVertexAttribArray(positionLocation);
 
     // Bind the position buffer.
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
 
     // Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
     var size = 3;          // 3 components per iteration
-    var type = gl.FLOAT;   // the data is 32bit floats
+    var type = this.gl.FLOAT;   // the data is 32bit floats
     var normalize = false; // don't normalize the data
     var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
     var offset = 0;        // start at the beginning of the buffer
-    gl.vertexAttribPointer(
+    this.gl.vertexAttribPointer(
       positionLocation, size, type, normalize, stride, offset);
 
     // Compute the projection matrix
@@ -177,13 +191,13 @@ export class Dice {
     matrix = twgl.m4.rotateX(matrix, this.rotX);
 
     // Set the matrix.
-    gl.uniformMatrix4fv(matrixLocation, false, matrix);
+    this.gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
     // Tell the shader to use texture unit 0 for u_texture
-    gl.uniform1i(textureLocation, 0);
+    this.gl.uniform1i(textureLocation, 0);
 
     // Draw the geometry.
-    gl.drawArrays(gl.TRIANGLES, 0, 6 * 6);
+    this.gl.drawArrays(this.gl.TRIANGLES, 0, 6 * 6);
 
   }
 
