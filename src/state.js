@@ -4,7 +4,7 @@ import { gameDraw, gameUpdate, leftBtnAction, rightBtnAction, startGame } from "
 
 export default class GameState {
   constructor() {
-    this.state = 0
+    this.state = -1;
     this.keepTicking = false;
     this.update = () => { }
     this.draw = () => { }

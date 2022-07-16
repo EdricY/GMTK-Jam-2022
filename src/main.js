@@ -10,10 +10,12 @@ let diceGrid;
 export function init() {
   // initial setup
   preloadAssets();
-  gameState.gotoMenu();
 
   // wait for assets to finish loading
   let loadImgInterval = setInterval(() => {
+    if (imgs["menu"] && !gameState.inState(GameState.MENU)) {
+      gameState.gotoMenu();
+    }
     if (doneLoadingResrcs()) {
       leftBtn.disabled = false;
       rightBtn.disabled = false;
