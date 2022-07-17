@@ -31,7 +31,7 @@ export const Particles = {
   },
   spiral: function (x, y, color, t = 20, rscale = 4) {
     for (let i = 0; i < t; i++) {
-      this.parts.push(newPart(x, y, color, rscale));
+      this.parts.push(newSpiralPart(x, y, color, rscale));
     }
   },
   addSpiralPart: function (x, y) {
@@ -77,15 +77,15 @@ function newPart(x, y, color, rscale) {
 }
 
 
-function newSpiralPart(x, y) {
+function newSpiralPart(x, y, color, rscale) {
   return {
     ox: x,
     oy: y,
     x: x,
     y: y,
-    r: 1 + 7 * Math.random(),
+    r: 1 + rscale * Math.random(),
     v: 10,
-    color: colors[Math.floor(Math.random() * 3)],
+    color: color,
     theta: Math.random() * tau,
     draw: function (ctx) {
       ctx.beginPath();

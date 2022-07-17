@@ -1,11 +1,13 @@
 import { Dice } from "./dice";
-import { DiceGrid } from "./dice-grid";
-import { canvas, ctx, gameState, getEl, H, MS_PER_UPDATE, randInt, resourceManager, W } from "./globals";
-import { leftBtn, rightBtn, setUpInputs } from "./inputs";
+import { canvas, ctx, gameState, getEl, getDefaultRandomColors, H, MS_PER_UPDATE, randInt, W } from "./globals";
+import { leftBtn, rightBtn, setUpInputs, switchButtons } from "./inputs";
+import { activeDice, bountyBoard, diceGrid, reloadCurrentLevel, resourceManager } from "./levels";
 import { preloadAssets, doneLoadingResrcs, imgs } from "./load";
 import { Particles } from "./particles";
 import GameState from "./state";
-let diceGrid;
+
+let loseTimer = 0;
+let lost = false;
 
 export function init() {
   // initial setup
@@ -20,9 +22,6 @@ export function init() {
       leftBtn.disabled = false;
       rightBtn.disabled = false;
       clearInterval(loadImgInterval);
-
-      diceGrid = new DiceGrid();
-      window.diceGrid = diceGrid
     }
   }, 500)
 }
@@ -31,21 +30,67 @@ export function gameUpdate() {
   diceGrid.update();
   Particles.update();
   resourceManager.update()
+  activeDice.update();
+
+  if (resourceManager.bananas < 2) {
+    loseTimer++
+    if (loseTimer === 300) {
+      lost = true;
+      switchButtons("RETRY", "EXIT", () => {
+        reloadCurrentLevel();
+        switchButtons(`ROLL (1)`, "SWEEP (2)", leftBtnAction, rightBtnAction);
+        lost = false;
+      }, () => {
+        gameState.gotoMenu();
+        lost = false;
+      })
+    }
+  } else {
+    loseTimer = 0;
+  }
 }
 
 export function gameDraw() {
-  const now = Date.now()
   ctx.clearRect(0, 0, W, H)
   ctx.drawImage(imgs['background'], 0, 0, W, H)
+  bountyBoard.draw(ctx);
   Particles.draw(ctx);
   diceGrid.draw(ctx);
   resourceManager.draw(ctx);
+  activeDice.draw(ctx);
+
+  if (lost) {
+    ctx.save()
+    ctx.globalAlpha = .5
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, W, H);
+    ctx.restore()
+    ctx.drawImage(imgs.dead, W / 2 - 200, H / 2 - 200, 400, 400);
+  }
+  else if (loseTimer > 150) {
+    ctx.save()
+    ctx.globalAlpha = loseTimer % 10 > 2 ? 1 : .5
+    ctx.drawImage(imgs.dead, W - 100, 30, 100, 100);
+    ctx.restore()
+  } else {
+    if (resourceManager.bananas > 20) {
+      ctx.drawImage(imgs.happy, W - 100, 30, 100, 100);
+    } else if (resourceManager.bananas > 1) {
+      ctx.drawImage(imgs.neutral, W - 100, 30, 100, 100);
+    } else {
+      ctx.drawImage(imgs.dead, W - 100, 30, 100, 100);
+    }
+  }
 }
 
 function onClick(x, y) {
-  if (!gameState.inState(GameState.GAME)) {
-    return;
+  if (gameState.inState(GameState.TUTORIAL1)) {
+    gameState.gotoTutorial2();
+  } else if (gameState.inState(GameState.TUTORIAL2)) {
+    gameState.gotoGame();
   }
+  if (lost) return;
+  if (!gameState.inState(GameState.GAME)) return;
 
   if (diceGrid.allResolved) {
     const didSelct = diceGrid.selectArrowAtXY(x, y);
@@ -56,40 +101,57 @@ function onClick(x, y) {
   if (clickedDice) {
     const sameColoredDice = diceGrid.getConnectedColors(clickedDice);
     if (sameColoredDice.length <= 1) return;
-    diceGrid.uncolorAndReroll(sameColoredDice)
+    sameColoredDice.forEach(d => {
+      resourceManager.addBananas(1, d.x, d.y)
+    })
+    diceGrid.uncolorAndReroll(sameColoredDice);
   }
 }
+
 
 export function leftBtnAction() {
   if (diceGrid.selectedLine) {
     const claimedDice = diceGrid.getSelectedLine();
     diceGrid.deselectLine();
+    bountyBoard.submitDice(claimedDice);
     claimedDice.forEach(d => d && diceGrid.removeDice(d));
   } else {
-
+    // roll active dice
+    if (activeDice.activeCost > resourceManager.bananas) {
+      resourceManager.startShake();
+      return;
+    }
+    if (!diceGrid.hasSpace()) return;
+    resourceManager.loseBananas(activeDice.activeCost);
+    activeDice.diceCount++;
     let d = new Dice(
-      ["onebanana", "onebanana", "splitbanana", "splitbanana", "threebanana", "threebanana"],
-      ["red", "blue", "blue", "red", "red", "blue"],
+      [...activeDice.dice.faces],
+      [...activeDice.dice.colors],
     )
     d.roll();
     diceGrid.addDiceRandomLoc(d);
     diceGrid.update();
+    activeDice.incrementActiveCost();
   }
 }
 
 export function rightBtnAction() {
   if (diceGrid.selectedLine) {
+    if (resourceManager.bananas <= 5) {
+      resourceManager.startShake();
+      return;
+    }
+    resourceManager.loseBananas(5)
+
     diceGrid.rerollSelectedLine();
     diceGrid.deselectLine();
   } else {
-    let d = new Dice(
-      ["glyph1", "glyph2", "glyph3", "glyph4", "glyph5", "glyph6"],
-      ["gray", "red", "green", "green", "blue", "red"],
-    )
-    d.roll();
-    diceGrid.addDiceRandomLoc(d);
-    diceGrid.update();
-
+    if (resourceManager.bananas <= 1) {
+      resourceManager.startShake();
+      return;
+    }
+    activeDice.startSweep();
+    resourceManager.loseBananas(2)
   }
 
 }

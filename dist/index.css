@@ -68,7 +68,6 @@ button {
     box-shadow: 4px 4px 4px #333;
     transition: background 0.8s;
     pointer-events: all;
-
 }
 
 button:active {

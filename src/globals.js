@@ -1,5 +1,4 @@
 import { getEl } from "./inputs";
-import { ResourceManager } from "./resource";
 import GameState from "./state";
 
 export const W = 600;
@@ -11,7 +10,6 @@ export const UPDATES_PER_SEC = 60;
 export const MS_PER_UPDATE = 1000 / UPDATES_PER_SEC;
 
 export const gameState = new GameState();
-export const resourceManager = new ResourceManager();
 
 export function lerp(a, b, frac) {
   return a * (1 - frac) + b * frac;
@@ -43,4 +41,10 @@ export const shuffle = (array) => {
     array[i] = array[j]
     array[j] = temp
   }
+}
+
+const defaultColors = ["red", "blue", "green", "red", "blue", "green"]
+export const getDefaultRandomColors = (array) => {
+  shuffle(defaultColors);
+  return [...defaultColors];
 }

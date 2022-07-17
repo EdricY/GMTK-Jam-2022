@@ -1,5 +1,6 @@
 import { DiceRender } from "./dice-render";
-import { H, MS_PER_UPDATE, randEl, randInt, resourceManager, W } from "./globals";
+import { H, MS_PER_UPDATE, randEl, randInt, W } from "./globals";
+import { resourceManager } from "./levels";
 import { sounds } from "./load";
 import { Particles } from "./particles";
 
@@ -22,7 +23,7 @@ export class Dice {
     this.x = x;
     this.y = y;
 
-    this.rerollTimer = 0;
+    this.rerollCountdown = 0;
   }
 
   get face() {
@@ -33,7 +34,7 @@ export class Dice {
   }
 
   doDelayedReroll(ticks = 20) {
-    this.rerollTimer = ticks;
+    this.rerollCountdown = ticks;
   }
 
   remapFaces() {
@@ -50,9 +51,9 @@ export class Dice {
   }
 
   update() {
-    if (this.rerollTimer > 0) {
-      this.rerollTimer--
-      if (this.rerollTimer === 1) {
+    if (this.rerollCountdown > 0) {
+      this.rerollCountdown--
+      if (this.rerollCountdown === 1) {
         this.roll();
       }
       return;

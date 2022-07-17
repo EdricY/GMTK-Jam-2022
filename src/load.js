@@ -1,6 +1,8 @@
 export var loaded = 0;
 const imgSources = {
-  menu: "./assets/workingtitle.png",
+  menu: "./assets/title.png",
+  tutorial1: "./assets/tutorial1.png",
+  tutorial2: "./assets/tutorial2.png",
   red: "./assets/red.png",
   blue: "./assets/blue.png",
   green: "./assets/green.png",
@@ -12,16 +14,17 @@ const imgSources = {
   arrowLeft: "./assets/arrowlighter-left.png",
   diceIcon: "./assets/dice.png",
   glyph1: "./assets/thicdiceface1.png",
-  glyph2: "./assets/thicdiceface2.png",
-  glyph3: "./assets/thicdiceface3.png",
-  glyph4: "./assets/thicdiceface4.png",
-  glyph5: "./assets/thicdiceface5.png",
-  glyph6: "./assets/thicdiceface6.png",
+  glyph2: "./assets/thicdiceface4.png",
+  glyph3: "./assets/thicdiceface2.png",
   onebanana: "./assets/onebanana.png",
   threebanana: "./assets/threebanana.png",
   splitbanana: "./assets/splitbanana.png",
   background: "./assets/background.png",
   credits: "./assets/credits.png",
+  check: "./assets/check.png",
+  dead: "./assets/monkeyface-dead.png",
+  happy: "./assets/monkeyface-happyeyebrow.png",
+  neutral: "./assets/monkeyface-happy.png",
 }
 
 const audioSources = {

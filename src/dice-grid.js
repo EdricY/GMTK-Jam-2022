@@ -1,5 +1,6 @@
 import { ctx, H, randEl, randInt, W } from "./globals";
 import { leftBtn, rightBtn, switchButtons } from "./inputs";
+import { activeDice, bountyBoard, level } from "./levels";
 import { imgs } from "./load";
 import { leftBtnAction, rightBtnAction } from "./main";
 
@@ -35,7 +36,7 @@ export class DiceGrid {
 
   deselectLine() {
     this.selectedLine = null;
-    switchButtons("DICE A", "DICE B", leftBtnAction, rightBtnAction)
+    switchButtons(`ROLL (${activeDice.activeCost})`, "SWEEP (2)", leftBtnAction, rightBtnAction)
   }
 
   rerollRow(r) {
@@ -144,7 +145,6 @@ export class DiceGrid {
     const dy = y - this.topEdge;
     const c = Math.floor(dx / squareSize);
     const r = Math.floor(dy / squareSize);
-    console.log('arrow', r, c)
     if ((c === -1 || c === this.n) && r < this.n && r >= 0) {
       if (!this.anyDiceInRow(r)) return null;
       return ["h", r];
@@ -159,7 +159,12 @@ export class DiceGrid {
     const lastSelected = this.selectedLine;
     this.selectedLine = this.getArrowAtXY(x, y);
     if (this.selectedLine) {
-      switchButtons("CLAIM", "REROLL", leftBtnAction, rightBtnAction);
+      switchButtons(bountyBoard.isSubmittable(this.getSelectedLine()) ? "SUBMIT!" : "REMOVE",
+        `REROLL (${4 + level})`,
+        leftBtnAction,
+        rightBtnAction
+
+      );
       return true;
     } else if (lastSelected) {
       this.deselectLine();
@@ -187,6 +192,10 @@ export class DiceGrid {
   removeDice(d) {
     const idx = this.grid.findIndex((x) => x === d);
     this.remove(idx);
+  }
+
+  hasSpace() {
+    return this.grid.some(x => x === null);
   }
 
   addDiceSequential(dice) {
@@ -296,7 +305,7 @@ export class DiceGrid {
 
 
 const pi = Math.PI;
-function drawRoundRect(ctx, color, x, y, w, h, r, lw, backColor) {
+export function drawRoundRect(ctx, color, x, y, w, h, r, lw, backColor, fillColor) {
   if (backColor) {
     ctx.save();
     ctx.translate(3, 3)
@@ -321,6 +330,9 @@ function drawRoundRect(ctx, color, x, y, w, h, r, lw, backColor) {
   ctx.strokeStyle = color;
   ctx.lineWidth = lw;
   ctx.stroke();
-
+  if (fillColor) {
+    ctx.fillStyle = fillColor;
+    ctx.fill();
+  }
 }
 

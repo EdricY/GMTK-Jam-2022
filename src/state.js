@@ -1,8 +1,9 @@
 import { Dice } from "./dice";
 import { H, W, canvas, ctx, MS_PER_UPDATE, randInt } from "./globals"
 import { leftBtn, rightBtn, switchButtons } from "./inputs";
+import { loadLevel1 } from "./levels";
 import { imgs } from "./load";
-import { gameDraw, gameUpdate, leftBtnAction, rightBtnAction, startGame } from "./main";
+import { gameDraw, gameUpdate, leftBtnAction, rightBtnAction } from "./main";
 
 export default class GameState {
   constructor() {
@@ -15,23 +16,33 @@ export default class GameState {
   static get PAUSE() { return 1 }
   static get GAME() { return 2 }
   static get CRED() { return 3 }
+  static get TUTORIAL1() { return 4 }
+  static get TUTORIAL2() { return 5 }
 
   inState(num) {
     return this.state == num
   }
 
   gotoMenu() {
+    leftBtn.classList.remove("nodisp");
+    rightBtn.classList.remove("nodisp");
+
     this.keepTicking = false;
     this.state = GameState.MENU;
 
     ctx.drawImage(imgs["menu"], 0, 0, W, H);
     this.update = () => { }
-    this.draw = () => { }
+    this.draw = () => {
+      ctx.drawImage(imgs["menu"], 0, 0, W, H);
+    }
 
-    switchButtons("PLAY", "CREDITS", () => this.gotoGame(), () => this.gotoCredits())
+    switchButtons("PLAY", "CREDITS", () => this.gotoTutorial1(), () => this.gotoCredits())
   }
 
   gotoCredits() {
+    leftBtn.classList.remove("nodisp");
+    rightBtn.classList.remove("nodisp");
+
     this.keepTicking = true;
     this.state = GameState.CRED;
 
@@ -67,6 +78,8 @@ export default class GameState {
     ];
     creditsDice.forEach(x => x.rollToFace(0))
     this.draw = () => creditsDraw(ctx, creditsDice);
+    this.update = () => { }
+
     requestAnimationFrame(this.tick.bind(this));
 
 
@@ -78,18 +91,37 @@ export default class GameState {
     )
   }
 
+  gotoTutorial1() {
+    leftBtn.classList.add("nodisp");
+    rightBtn.classList.add("nodisp");
+    this.keepTicking = false;
+    this.state = GameState.TUTORIAL1;
+    this.draw = () => tutorialDraw1(ctx);
+    tutorialDraw1(ctx)
+  }
+
+  gotoTutorial2() {
+    leftBtn.classList.add("nodisp");
+    rightBtn.classList.add("nodisp");
+
+    this.keepTicking = false;
+    this.state = GameState.TUTORIAL2;
+    this.draw = () => tutorialDraw2(ctx);
+    tutorialDraw2(ctx)
+  }
+
   gotoGame() {
+    leftBtn.classList.remove("nodisp");
+    rightBtn.classList.remove("nodisp");
+
     this.keepTicking = true;
     this.state = GameState.GAME;
     this.update = gameUpdate;
     this.draw = gameDraw;
     requestAnimationFrame(this.tick.bind(this));
 
-    leftBtn.innerText = "DICE A"
-    leftBtn.onclick = leftBtnAction;
-
-    rightBtn.innerText = "DICE B";
-    rightBtn.onclick = rightBtnAction;
+    switchButtons(`ROLL (1)`, "SWEEP (2)", leftBtnAction, rightBtnAction);
+    loadLevel1();
   }
   tick() {
     let current = performance.now();
@@ -117,4 +149,14 @@ function creditsDraw(ctx, creditsDice) {
   creditsDice.forEach(dice => {
     dice.draw(ctx);
   });
+}
+
+function tutorialDraw1(ctx) {
+  ctx.clearRect(0, 0, W, H);
+  ctx.drawImage(imgs["tutorial1"], 0, 0, W, H);
+}
+
+function tutorialDraw2(ctx) {
+  ctx.clearRect(0, 0, W, H);
+  ctx.drawImage(imgs["tutorial2"], 0, 0, W, H);
 }
