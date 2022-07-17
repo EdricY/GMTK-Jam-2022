@@ -1,6 +1,7 @@
 import { Dice } from "./dice"
 import { getDefaultRandomColors, randEl } from "./globals"
 import { leftBtn } from "./inputs";
+import { resourceManager } from "./levels";
 
 
 
@@ -125,6 +126,16 @@ function getRandomFaces(diceCount) {
       randEl(bananaOptions1),
       randEl(bananaOptions1),
       randEl(bananaOptions1),
+    ]
+  }
+  if (resourceManager?.bananas < 10) {
+    return [
+      randEl(bananaOptions1),
+      randEl(bananaOptions1),
+      randEl(bananaOptions1),
+      randEl(faceOptions),
+      randEl(faceOptions),
+      randEl(faceOptions),
     ]
   }
 
