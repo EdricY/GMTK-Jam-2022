@@ -149,7 +149,7 @@ export function rightBtnAction() {
       resourceManager.startShake();
       return;
     }
-    resourceManager.loseBananas(5)
+    resourceManager.loseBananas(4 + level)
 
     diceGrid.rerollSelectedLine();
     diceGrid.deselectLine();
