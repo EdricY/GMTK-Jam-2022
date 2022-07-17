@@ -26,7 +26,7 @@ export function randBell(num, frac = .5) {
 
 export function randInt(min, max) {
   const range = max - min + 1;
-  return Math.floor(Math.random() * range);
+  return Math.floor(min + Math.random() * range);
 }
 
 export function randEl(arr) {

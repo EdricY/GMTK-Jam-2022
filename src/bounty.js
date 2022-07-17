@@ -1,6 +1,6 @@
 import { drawRoundRect } from "./dice-grid";
 import { H, W } from "./globals";
-import { gotoNextLevel, level } from "./levels";
+import { gotoNextLevel, level, resourceManager } from "./levels";
 import { imgs, sounds } from "./load";
 import { Particles } from "./particles";
 
@@ -40,10 +40,20 @@ export class BountyBoard {
 
     this.faces[face] = true;
 
-    if (face === "glyph1") Particles.spiral(65, 70, "lime", 30, 10)
-    else if (face === "glyph2") Particles.spiral(65, 130, "lime", 30, 10)
-    else if (face === "glyph3") Particles.spiral(65, 190, "lime", 30, 10)
-    if (this.faces.glyph1 && this.faces.glyph2 && this.faces.glyph3) {
+    if (face === "glyph1") {
+      Particles.spiral(65, 70, "lime", 30, 10)
+      resourceManager.addBananas(10, 65, 70)
+    }
+    else if (face === "glyph2") {
+      Particles.spiral(65, 130, "lime", 30, 10)
+      resourceManager.addBananas(10, 65, 130)
+    }
+    else if (face === "glyph3") {
+      Particles.spiral(65, 190, "lime", 30, 10)
+      resourceManager.addBananas(10, 65, 190)
+    }
+    if (this.faces.glyph1 && this.
+      faces.glyph2 && this.faces.glyph3) {
       Particles.spiral(W / 2, H / 2, "lime", 60, 20)
       Particles.spiral(W / 2, H / 2, "white", 60, 20)
       Particles.spiral(W / 2, H / 2, "green", 60, 20)

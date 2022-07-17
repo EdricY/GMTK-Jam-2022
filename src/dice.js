@@ -87,7 +87,8 @@ export class Dice {
   rollToFace(idx) {
     this.resolved = false;
     this.faceIdx = idx;
-    this.renderer.roll(idx, randInt(1000, 2000), .01 + Math.random())
+    const time = randInt(1000, 2000)
+    this.renderer.roll(idx, time, .01 + Math.random() / 2)
   }
 
 }
