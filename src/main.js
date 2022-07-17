@@ -1,8 +1,8 @@
 import { Dice } from "./dice";
 import { canvas, ctx, gameState, getEl, getDefaultRandomColors, H, MS_PER_UPDATE, randInt, W } from "./globals";
 import { leftBtn, rightBtn, setUpInputs, switchButtons } from "./inputs";
-import { activeDice, bountyBoard, diceGrid, reloadCurrentLevel, resourceManager } from "./levels";
-import { preloadAssets, doneLoadingResrcs, imgs } from "./load";
+import { activeDice, bountyBoard, diceGrid, level, reloadCurrentLevel, resourceManager } from "./levels";
+import { preloadAssets, doneLoadingResrcs, imgs, sounds } from "./load";
 import { Particles } from "./particles";
 import GameState from "./state";
 
@@ -34,7 +34,13 @@ export function gameUpdate() {
 
   if (resourceManager.bananas < 2) {
     loseTimer++
-    if (loseTimer === 300) {
+    if (loseTimer === 100 || loseTimer === 200) {
+      sounds.blip.currentTime = 0
+      sounds.blip.play();
+    } else if (loseTimer === 300) {
+      sounds.blip.currentTime = 0
+      sounds.blip.play();
+
       lost = true;
       switchButtons("RETRY", "EXIT", () => {
         reloadCurrentLevel();
@@ -105,6 +111,8 @@ function onClick(x, y) {
       resourceManager.addBananas(1, d.x, d.y)
     })
     diceGrid.uncolorAndReroll(sameColoredDice);
+    sounds.shoop.currentTime = 0;
+    sounds.shoop.play();
   }
 }
 
@@ -137,7 +145,7 @@ export function leftBtnAction() {
 
 export function rightBtnAction() {
   if (diceGrid.selectedLine) {
-    if (resourceManager.bananas <= 5) {
+    if (resourceManager.bananas < 4 + level) {
       resourceManager.startShake();
       return;
     }

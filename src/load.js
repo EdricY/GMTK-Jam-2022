@@ -32,6 +32,9 @@ const audioSources = {
   clunk2: "./assets/clunk.mp3",
   clunk3: "./assets/clunk.mp3",
   clunk4: "./assets/clunk.mp3",
+  blip: "./assets/blip.mp3",
+  shoop: "./assets/shoop.mp3",
+  win: "./assets/win.mp3",
 }
 export const imgs = {}
 export const sounds = {}
@@ -48,7 +51,6 @@ export function preloadAssets() {
     sounds[key].onloadeddata = onResrcLoad
   }
 }
-window.sounds = sounds;
 
 export const doneLoadingResrcs = () => {
   return loaded == Object.keys(imgSources).length + Object.keys(audioSources).length

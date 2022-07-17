@@ -11,20 +11,12 @@ export let bountyBoard;
 export let resourceManager = new ResourceManager();
 
 export let level = 1;
-window.loadLevel1 = loadLevel1
-window.loadLevel2 = loadLevel2
-window.loadLevel3 = loadLevel3
-window.bountyBoard = bountyBoard
-window.resourceManager = resourceManager
 export function loadLevel1() {
   level = 1;
   diceGrid = new DiceGrid(3);
   bountyBoard = new BountyBoard();
   activeDice = new ActiveDice();
   resourceManager = new ResourceManager();
-  window.bountyBoard = bountyBoard
-  window.resourceManager = resourceManager
-
 }
 
 export function loadLevel2() {
@@ -33,8 +25,6 @@ export function loadLevel2() {
   bountyBoard = new BountyBoard();
   activeDice = new ActiveDice();
   resourceManager = new ResourceManager();
-  window.resourceManager = resourceManager
-  window.bountyBoard = bountyBoard
 }
 
 export function loadLevel3() {
@@ -43,8 +33,6 @@ export function loadLevel3() {
   bountyBoard = new BountyBoard();
   activeDice = new ActiveDice();
   resourceManager = new ResourceManager();
-  window.resourceManager = resourceManager
-  window.bountyBoard = bountyBoard
 }
 
 export function gotoNextLevel() {

@@ -1,11 +1,12 @@
 import { drawRoundRect } from "./dice-grid";
 import { H, W } from "./globals";
 import { gotoNextLevel, level } from "./levels";
-import { imgs } from "./load";
+import { imgs, sounds } from "./load";
 import { Particles } from "./particles";
 
 export class BountyBoard {
   constructor() {
+    window.bountyBoard = this;
     this.ctx = document.createElement("canvas").getContext("2d");
     this.ctx.canvas.width = 500
     this.ctx.canvas.height = 500
@@ -43,13 +44,15 @@ export class BountyBoard {
     if (face === "glyph1") Particles.spiral(65, 70, "lime", 30, 10)
     else if (face === "glyph2") Particles.spiral(65, 130, "lime", 30, 10)
     else if (face === "glyph3") Particles.spiral(65, 190, "lime", 30, 10)
-
     if (this.faces.glyph1 && this.faces.glyph2 && this.faces.glyph3) {
       Particles.spiral(W / 2, H / 2, "lime", 60, 20)
       Particles.spiral(W / 2, H / 2, "white", 60, 20)
       Particles.spiral(W / 2, H / 2, "green", 60, 20)
       setTimeout(gotoNextLevel, 1000)
     }
+
+    sounds.win.currentTime = 0;
+    sounds.win.play();
   }
 
   draw(ctx) {
