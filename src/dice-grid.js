@@ -36,7 +36,7 @@ export class DiceGrid {
 
   deselectLine() {
     this.selectedLine = null;
-    switchButtons(`ROLL (${activeDice.activeCost})`, "SWEEP (2)", leftBtnAction, rightBtnAction)
+    switchButtons(`ROLL (🍌${activeDice.activeCost})`, "SWEEP (🍌2)", leftBtnAction, rightBtnAction)
   }
 
   rerollRow(r) {
@@ -160,7 +160,7 @@ export class DiceGrid {
     this.selectedLine = this.getArrowAtXY(x, y);
     if (this.selectedLine) {
       switchButtons(bountyBoard.isSubmittable(this.getSelectedLine()) ? "SUBMIT!" : "REMOVE",
-        `REROLL (${4 + level})`,
+        `REROLL (🍌${4 + level})`,
         leftBtnAction,
         rightBtnAction
 

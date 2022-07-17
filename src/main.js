@@ -44,7 +44,7 @@ export function gameUpdate() {
       lost = true;
       switchButtons("RETRY", "EXIT", () => {
         reloadCurrentLevel();
-        switchButtons(`ROLL (1)`, "SWEEP (2)", leftBtnAction, rightBtnAction);
+        switchButtons(`ROLL (🍌1)`, "SWEEP (🍌2)", leftBtnAction, rightBtnAction);
         lost = false;
       }, () => {
         gameState.gotoMenu();

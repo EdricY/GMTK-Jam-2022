@@ -120,7 +120,7 @@ export default class GameState {
     this.draw = gameDraw;
     requestAnimationFrame(this.tick.bind(this));
 
-    switchButtons(`ROLL (1)`, "SWEEP (2)", leftBtnAction, rightBtnAction);
+    switchButtons(`ROLL (🍌1)`, "SWEEP (🍌2)", leftBtnAction, rightBtnAction);
     loadLevel1();
   }
   tick() {

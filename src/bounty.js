@@ -6,7 +6,6 @@ import { Particles } from "./particles";
 
 export class BountyBoard {
   constructor() {
-    window.bountyBoard = this;
     this.ctx = document.createElement("canvas").getContext("2d");
     this.ctx.canvas.width = 500
     this.ctx.canvas.height = 500

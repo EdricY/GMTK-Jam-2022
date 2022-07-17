@@ -35,13 +35,13 @@ export class ResourceManager {
     ctx.font = "bold 30px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif";
     ctx.textAlign = "right"
     ctx.fillStyle = "#8a7611";
-    ctx.fillText(`Bananas: ${this.bananas}`, 580, 140)
+    ctx.fillText(`🍌${this.bananas}`, 580, 140)
     if (this.shakeCountdown > 0 && this.shakeCountdown % 6 > 2) {
       ctx.fillStyle = "#d00";
     } else {
       ctx.fillStyle = "#dd0";
     }
-    ctx.fillText(`Bananas: ${this.bananas}`, 582, 142);
+    ctx.fillText(`🍌${this.bananas}`, 582, 142);
 
 
     for (let index = 0; index < this.messages.length; index++) {

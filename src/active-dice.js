@@ -9,16 +9,9 @@ export class ActiveDice {
   constructor() {
     this.diceCount = 0;
     this.dice = new Dice(
-      [
-        "onebanana",
-        "splitbanana",
-        "threebanana",
-        "onebanana",
-        "onebanana",
-        "threebanana"
-      ],
+      getRandomFaces(0),
       getDefaultRandomColors(),
-      250, 100
+      260, 100
     )
 
     this.dice.renderer.rollStopTime = Date.now() + 99999999;
@@ -29,12 +22,12 @@ export class ActiveDice {
     this.didSweep = true;
 
     this.activeCost = 1;
-    leftBtn.innerText = `ROLL (${this.activeCost})`;
+    leftBtn.innerText = `ROLL (🍌${this.activeCost})`;
 
   }
   incrementActiveCost() {
     this.activeCost += Math.round(this.activeCost / 2)
-    leftBtn.innerText = `ROLL (${this.activeCost})`;
+    leftBtn.innerText = `ROLL (🍌${this.activeCost})`;
   }
   startSweep() {
     this.didSweep = false;
@@ -44,7 +37,7 @@ export class ActiveDice {
   sweep() {
     this.diceCount++;
     this.activeCost = 1;
-    leftBtn.innerText = `ROLL (${this.activeCost})`;
+    leftBtn.innerText = `ROLL (🍌${this.activeCost})`;
 
     const faces = getRandomFaces(this.diceCount)
 
