@@ -1,5 +1,6 @@
 export var loaded = 0;
 const imgSources = {
+  menu: "./assets/workingtitle.png",
   red: "./assets/red.png",
   blue: "./assets/blue.png",
   green: "./assets/green.png",
@@ -20,7 +21,7 @@ const imgSources = {
   threebanana: "./assets/threebanana.png",
   splitbanana: "./assets/splitbanana.png",
   background: "./assets/background.png",
-  menu: "./assets/workingtitle.png",
+  credits: "./assets/credits.png",
 }
 
 const audioSources = {

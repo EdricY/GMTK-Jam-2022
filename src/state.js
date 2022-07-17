@@ -1,4 +1,6 @@
-import { H, leftBtn, rightBtn, W, canvas, ctx, MS_PER_UPDATE } from "./globals"
+import { Dice } from "./dice";
+import { H, W, canvas, ctx, MS_PER_UPDATE, randInt } from "./globals"
+import { leftBtn, rightBtn, switchButtons } from "./inputs";
 import { imgs } from "./load";
 import { gameDraw, gameUpdate, leftBtnAction, rightBtnAction, startGame } from "./main";
 
@@ -22,30 +24,58 @@ export default class GameState {
     this.keepTicking = false;
     this.state = GameState.MENU;
 
-    console.log(imgs["menu"])
-    ctx.drawImage(imgs["menu"], 0, 0, W, H)
+    ctx.drawImage(imgs["menu"], 0, 0, W, H);
+    this.update = () => { }
+    this.draw = () => { }
 
-    leftBtn.innerText = "PLAY"
-    leftBtn.onclick = () => this.gotoGame();
-
-
-    rightBtn.innerText = "CREDITS"
-    rightBtn.onclick = () => this.gotoCredits()
+    switchButtons("PLAY", "CREDITS", () => this.gotoGame(), () => this.gotoCredits())
   }
 
   gotoCredits() {
-    this.keepTicking = false;
+    this.keepTicking = true;
     this.state = GameState.CRED;
 
     ctx.clearRect(0, 0, W, H);
-    ctx.font = "50px Arial"
-    ctx.fillText("Credits", 100, 100);
+    ctx.drawImage(imgs["credits"], 0, 0, W, H);
 
-    leftBtn.innerText = "BACK"
-    leftBtn.onclick = () => this.gotoMenu();
+    const creditsDice = [
+      new Dice(
+        ["E", "E", "E", "M", "I", "I"],
+        ["gray", "red", "green", "green", "blue", "red"],
+        100, 100
+      ),
+      new Dice(
+        ["D", "D", "D", "A", "M", "M"],
+        ["gray", "red", "green", "green", "blue", "red"],
+        200, 100
+      ),
+      new Dice(
+        ["R", "R", "R", "G", "A", "A"],
+        ["gray", "red", "green", "green", "blue", "red"],
+        300, 100
+      ),
+      new Dice(
+        ["I", "I", "I", "I", "N", "N"],
+        ["gray", "red", "green", "green", "blue", "red"],
+        400, 100
+      ),
+      new Dice(
+        ["C", "C", "C", "C", "I", "I"],
+        ["gray", "red", "green", "green", "blue", "red"],
+        500, 100
+      ),
+    ];
+    creditsDice.forEach(x => x.rollToFace(0))
+    this.draw = () => creditsDraw(ctx, creditsDice);
+    requestAnimationFrame(this.tick.bind(this));
 
-    rightBtn.innerText = "DO MAGIC";
-    rightBtn.onclick = () => console.log("asdf");
+
+
+    switchButtons("BACK", "DO MAGIC", () => this.gotoMenu(), () => {
+      const rand = randInt(0, 5);
+      creditsDice.forEach(x => x.rollToFace(rand))
+    }
+    )
   }
 
   gotoGame() {
@@ -79,3 +109,12 @@ export default class GameState {
 
 let lastTime = performance.now();
 let lag = 0;
+
+function creditsDraw(ctx, creditsDice) {
+  ctx.clearRect(0, 0, W, H);
+  ctx.drawImage(imgs["credits"], 0, 0, W, H);
+
+  creditsDice.forEach(dice => {
+    dice.draw(ctx);
+  });
+}

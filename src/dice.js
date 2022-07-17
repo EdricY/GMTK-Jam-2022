@@ -11,7 +11,7 @@ const colorDict = {
 }
 
 export class Dice {
-  constructor(faces, colors) {
+  constructor(faces, colors, x = 0, y = 0) {
     this.renderer = new DiceRender(faces, colors)
     this.faces = faces;
     this.colors = colors;
@@ -19,8 +19,8 @@ export class Dice {
     this.face;
     this.color;
     this.resolved = false;
-    this.x = 0;
-    this.y = 0;
+    this.x = x;
+    this.y = y;
   }
 
   get face() {
@@ -46,8 +46,13 @@ export class Dice {
   }
 
   roll() {
-    this.resolved = false;
-    this.faceIdx = randInt(0, 5);
-    this.renderer.roll(this.faceIdx, randInt(1000, 2000), .01 + Math.random())
+    this.rollToFace(randInt(0, 5))
   }
+
+  rollToFace(idx) {
+    this.resolved = false;
+    this.faceIdx = idx;
+    this.renderer.roll(idx, randInt(1000, 2000), .01 + Math.random())
+  }
+
 }

@@ -1,15 +1,14 @@
+import { getEl } from "./inputs";
 import GameState from "./state";
 
 export const W = 600;
 export const H = 1000;
 
-export const getEl = x => document.getElementById(x);
 export const canvas = getEl("canvas");
 export const ctx = canvas.getContext("2d");
 export const UPDATES_PER_SEC = 60;
 export const MS_PER_UPDATE = 1000 / UPDATES_PER_SEC;
-export const leftBtn = getEl("leftBtn");
-export const rightBtn = getEl("rightBtn");
+
 export const gameState = new GameState();
 
 export function lerp(a, b, frac) {

@@ -1,7 +1,7 @@
 import { Dice } from "./dice";
 import { DiceGrid } from "./dice-grid";
-import { canvas, ctx, gameState, getEl, H, leftBtn, MS_PER_UPDATE, randInt, rightBtn, W } from "./globals";
-import { setUpInputs } from "./inputs";
+import { canvas, ctx, gameState, getEl, H, MS_PER_UPDATE, randInt, W } from "./globals";
+import { leftBtn, rightBtn, setUpInputs } from "./inputs";
 import { preloadAssets, doneLoadingResrcs, imgs } from "./load";
 import { Particles } from "./particles";
 import GameState from "./state";
@@ -63,7 +63,7 @@ export function leftBtnAction() {
 
     let d = new Dice(
       ["onebanana", "onebanana", "splitbanana", "splitbanana", "threebanana", "threebanana"],
-      ["red", "blue", "blue", "blue", "red", "blue"],
+      ["red", "blue", "blue", "red", "red", "blue"],
     )
     d.roll();
     diceGrid.addDiceRandomLoc(d);

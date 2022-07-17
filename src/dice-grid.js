@@ -1,5 +1,7 @@
-import { H, leftBtn, randEl, randInt, rightBtn, W } from "./globals";
+import { H, randEl, randInt, W } from "./globals";
+import { leftBtn, rightBtn, switchButtons } from "./inputs";
 import { imgs } from "./load";
+import { leftBtnAction, rightBtnAction } from "./main";
 
 const squareSize = 80;
 
@@ -9,8 +11,7 @@ export class DiceGrid {
     this.size = n * squareSize;
     this.halfsize = n * squareSize / 2;
     this.leftEdge = (W / 2) - this.halfsize;
-    this.topEdge = H - this.size - squareSize * 2.5;
-    console.log(this.topEdge)
+    this.topEdge = H - this.size - squareSize * 3;
     this.grid = new Array(n * n).fill(null);
     this.allResolved = true;
 
@@ -34,8 +35,7 @@ export class DiceGrid {
 
   deselectLine() {
     this.selectedLine = null;
-    leftBtn.innerText = "DICE A"
-    rightBtn.innerText = "DICE B"
+    switchButtons("DICE A", "DICE B", leftBtnAction, rightBtnAction)
   }
 
   rerollRow(r) {
@@ -110,6 +110,7 @@ export class DiceGrid {
     const dy = y - this.topEdge;
     const c = Math.floor(dx / squareSize);
     const r = Math.floor(dy / squareSize);
+    console.log('arrow', r, c)
     if ((c === -1 || c === this.n) && r < this.n && r >= 0) {
       if (!this.anyDiceInRow(r)) return null;
       return ["h", r];
@@ -121,12 +122,12 @@ export class DiceGrid {
   }
 
   selectArrowAtXY(x, y) {
+    const lastSelected = this.selectedLine;
     this.selectedLine = this.getArrowAtXY(x, y);
     if (this.selectedLine) {
-      leftBtn.innerText = "CLAIM"
-      rightBtn.innerText = "REROLL"
-    } else {
-      this.deselectLine()
+      switchButtons("CLAIM", "REROLL", leftBtnAction, rightBtnAction)
+    } else if (lastSelected) {
+      this.deselectLine();
     }
   }
 
