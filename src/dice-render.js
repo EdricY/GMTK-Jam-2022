@@ -118,8 +118,8 @@ export class DiceRender {
 
   }
 
-  draw(ctx, x, y) {
-    if (this.isDoneRolling(Date.now())) {
+  draw(ctx, x, y, force = false) {
+    if (!force && this.isDoneRolling(Date.now())) {
       ctx.drawImage(this.bufferCtx.canvas, x - 50, y - 50, 100, 100);
       return;
     }

@@ -1,5 +1,5 @@
 import { DiceRender } from "./dice-render";
-import { H, MS_PER_UPDATE, randEl, randInt, W } from "./globals";
+import { H, MS_PER_UPDATE, randEl, randInt, resourceManager, W } from "./globals";
 import { sounds } from "./load";
 import { Particles } from "./particles";
 
@@ -21,6 +21,8 @@ export class Dice {
     this.resolved = false;
     this.x = x;
     this.y = y;
+
+    this.rerollTimer = 0;
   }
 
   get face() {
@@ -30,15 +32,47 @@ export class Dice {
     return this.colors[this.faceIdx];
   }
 
+  doDelayedReroll(ticks = 20) {
+    this.rerollTimer = ticks;
+  }
+
+  remapFaces() {
+    this.renderer.mapFaces(this.faces, this.colors);
+    this.renderer.draw(this.renderer.bufferCtx, this.x, this.y, true);
+  }
+
+  particleExplode() {
+    Particles.explode(this.x, this.y, colorDict[this.color])
+  }
+
+  particleSpiral() {
+    Particles.explode(this.x, this.y, colorDict[this.color])
+  }
+
   update() {
+    if (this.rerollTimer > 0) {
+      this.rerollTimer--
+      if (this.rerollTimer === 1) {
+        this.roll();
+      }
+      return;
+    }
+
     if (!this.resolved && this.renderer.shouldBeResolved()) {
       this.resolved = true;
       const clunkName = randEl(["clunk1", "clunk2", "clunk3", "clunk4",])
       const clunk = sounds[clunkName];
       clunk.currentTime = 0
       clunk.play();
-      Particles.explode(this.x, this.y, colorDict[this.color])
+      Particles.explode(this.x, this.y, colorDict[this.color]);
+
+      if (this.face === "onebanana") {
+        resourceManager.addBananas(1, this.x, this.y);
+      } else if (this.face === "threebanana") {
+        resourceManager.addBananas(3, this.x, this.y);
+      }
     }
+
   }
 
   draw(ctx) {

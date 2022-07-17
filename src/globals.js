@@ -1,4 +1,5 @@
 import { getEl } from "./inputs";
+import { ResourceManager } from "./resource";
 import GameState from "./state";
 
 export const W = 600;
@@ -10,6 +11,7 @@ export const UPDATES_PER_SEC = 60;
 export const MS_PER_UPDATE = 1000 / UPDATES_PER_SEC;
 
 export const gameState = new GameState();
+export const resourceManager = new ResourceManager();
 
 export function lerp(a, b, frac) {
   return a * (1 - frac) + b * frac;
@@ -32,4 +34,13 @@ export function randInt(min, max) {
 export function randEl(arr) {
   const range = arr.length;
   return arr[Math.floor(Math.random() * range)];
+}
+
+export const shuffle = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * i)
+    const temp = array[i]
+    array[i] = array[j]
+    array[j] = temp
+  }
 }

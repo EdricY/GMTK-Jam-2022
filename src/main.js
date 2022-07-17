@@ -1,6 +1,6 @@
 import { Dice } from "./dice";
 import { DiceGrid } from "./dice-grid";
-import { canvas, ctx, gameState, getEl, H, MS_PER_UPDATE, randInt, W } from "./globals";
+import { canvas, ctx, gameState, getEl, H, MS_PER_UPDATE, randInt, resourceManager, W } from "./globals";
 import { leftBtn, rightBtn, setUpInputs } from "./inputs";
 import { preloadAssets, doneLoadingResrcs, imgs } from "./load";
 import { Particles } from "./particles";
@@ -30,6 +30,7 @@ export function init() {
 export function gameUpdate() {
   diceGrid.update();
   Particles.update();
+  resourceManager.update()
 }
 
 export function gameDraw() {
@@ -38,7 +39,7 @@ export function gameDraw() {
   ctx.drawImage(imgs['background'], 0, 0, W, H)
   Particles.draw(ctx);
   diceGrid.draw(ctx);
-
+  resourceManager.draw(ctx);
 }
 
 function onClick(x, y) {
@@ -47,11 +48,16 @@ function onClick(x, y) {
   }
 
   if (diceGrid.allResolved) {
-
-    diceGrid.selectArrowAtXY(x, y);
+    const didSelct = diceGrid.selectArrowAtXY(x, y);
+    if (didSelct) return;
   }
-  // const clickedDice = diceGrid.getDiceAtXY(x, y);
-  // if (clickedDice) diceGrid.removeDice(clickedDice)
+
+  const clickedDice = diceGrid.getDiceAtXY(x, y);
+  if (clickedDice) {
+    const sameColoredDice = diceGrid.getConnectedColors(clickedDice);
+    if (sameColoredDice.length <= 1) return;
+    diceGrid.uncolorAndReroll(sameColoredDice)
+  }
 }
 
 export function leftBtnAction() {

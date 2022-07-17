@@ -1,4 +1,4 @@
-import { H, randEl, randInt, W } from "./globals";
+import { ctx, H, randEl, randInt, W } from "./globals";
 import { leftBtn, rightBtn, switchButtons } from "./inputs";
 import { imgs } from "./load";
 import { leftBtnAction, rightBtnAction } from "./main";
@@ -98,8 +98,42 @@ export class DiceGrid {
     const dy = y - this.topEdge;
     const c = Math.floor(dx / squareSize);
     const r = Math.floor(dy / squareSize);
-    console.log(c, r)
     return this.getDiceAtRC(r, c);
+  }
+
+  getConnectedColors(dice) {
+    if (!dice) return [];
+    if (dice.color === "gray") return [];
+    const idx = this.grid.findIndex(x => x === dice);
+    if (idx == -1) return [];
+    const r = Math.floor(idx / this.n);
+    const c = idx % this.n;
+    return this.connectedColorsTraverse(dice.color, r, c)
+  }
+
+  connectedColorsTraverse(color, r, c, arr = []) {
+    const d = this.getDiceAtRC(r, c);
+    if (!d) return;
+    if (arr.includes(d)) return;
+    if (!d.resolved) return;
+    if (d.color !== color) return;
+    arr.push(d);
+    this.connectedColorsTraverse(color, r + 1, c, arr);
+    this.connectedColorsTraverse(color, r - 1, c, arr);
+    this.connectedColorsTraverse(color, r, c + 1, arr);
+    this.connectedColorsTraverse(color, r, c - 1, arr);
+    return arr;
+  }
+
+  uncolorAndReroll(diceArr) {
+    for (let index = 0; index < diceArr.length; index++) {
+      const dice = diceArr[index];
+      dice.colors[dice.faceIdx] = "gray";
+      // dice.faces[dice.faceIdx] = "gray";
+      dice.remapFaces();
+      dice.particleSpiral();
+      dice.doDelayedReroll();
+    }
   }
 
   getArrowAtXY(x, y) {
@@ -125,13 +159,17 @@ export class DiceGrid {
     const lastSelected = this.selectedLine;
     this.selectedLine = this.getArrowAtXY(x, y);
     if (this.selectedLine) {
-      switchButtons("CLAIM", "REROLL", leftBtnAction, rightBtnAction)
+      switchButtons("CLAIM", "REROLL", leftBtnAction, rightBtnAction);
+      return true;
     } else if (lastSelected) {
       this.deselectLine();
     }
+    return false;
   }
 
   getDiceAtRC(r, c) {
+    if (r < 0 || r >= this.n) return;
+    if (c < 0 || c >= this.n) return;
     return this.grid[r * this.n + c];
   }
 
