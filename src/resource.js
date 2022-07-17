@@ -6,7 +6,7 @@ export class ResourceManager {
 
   loseBananas(num) {
     this.bananas -= num;
-
+    this.messages.push(new MinusMessage(num, 580, 145));
   }
 
   addBananas(num, x, y) {
@@ -23,7 +23,7 @@ export class ResourceManager {
     for (let index = 0; index < this.messages.length; index++) {
       const m = this.messages[index];
       if (m.isExpired()) {
-        this.messages.splice(index--)
+        this.messages.splice(index--, 1)
       }
     }
 
@@ -76,6 +76,33 @@ class PlusMessage {
     ctx.fillText(`+${this.num}`, this.x - 2, y - 2)
     ctx.fillStyle = "#dd0";
     ctx.fillText(`+${this.num}`, this.x, y);
+    ctx.restore();
+  }
+}
+
+class MinusMessage {
+  constructor(num, x, y) {
+    this.x = x;
+    this.y = y;
+    this.num = num;
+    this.endTime = Date.now() + duration;
+  }
+
+  isExpired() {
+    return Date.now() > this.endTime;
+  }
+
+  draw(ctx) {
+    const percent = (this.endTime - Date.now()) / duration;
+    const y = this.y + 50 - percent * 50
+    ctx.save();
+    ctx.globalAlpha = percent;
+    ctx.font = "bold 30px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif";
+    ctx.textAlign = "center"
+    ctx.fillStyle = "#d00";
+    ctx.fillText(`-${this.num}`, this.x - 2, y - 2)
+    ctx.fillStyle = "#dd0";
+    ctx.fillText(`-${this.num}`, this.x, y);
     ctx.restore();
   }
 }

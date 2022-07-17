@@ -5,6 +5,7 @@ import { BountyBoard } from "./bounty";
 import { ActiveDice } from "./active-dice";
 import { ResourceManager } from "./resource";
 import { gameState } from "./globals";
+import { Dice } from "./dice";
 export let diceGrid;
 export let activeDice;
 export let bountyBoard;
@@ -25,6 +26,21 @@ export function loadLevel2() {
   bountyBoard = new BountyBoard();
   activeDice = new ActiveDice();
   resourceManager = new ResourceManager();
+
+  let d1 = new Dice(
+    [...activeDice.dice.faces],
+    [...activeDice.dice.colors],
+  )
+  d1.roll();
+  diceGrid.addDiceRandomLoc(d1);
+  diceGrid.update();
+  let d2 = new Dice(
+    [...activeDice.dice.faces],
+    [...activeDice.dice.colors],
+  )
+  d2.roll();
+  diceGrid.addDiceRandomLoc(d2);
+  diceGrid.update();
 }
 
 export function loadLevel3() {
@@ -33,6 +49,21 @@ export function loadLevel3() {
   bountyBoard = new BountyBoard();
   activeDice = new ActiveDice();
   resourceManager = new ResourceManager();
+
+  let d1 = new Dice(
+    [...activeDice.dice.faces],
+    [...activeDice.dice.colors],
+  )
+  d1.roll();
+  diceGrid.addDiceRandomLoc(d1);
+  diceGrid.update();
+  let d2 = new Dice(
+    [...activeDice.dice.faces],
+    [...activeDice.dice.colors],
+  )
+  d2.roll();
+  diceGrid.addDiceRandomLoc(d2);
+  diceGrid.update();
 }
 
 export function gotoNextLevel() {
